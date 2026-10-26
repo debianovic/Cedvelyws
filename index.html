@@ -24,11 +24,11 @@ width:1180px;margin:0 auto;padding:44px 44px 36px;background:var(--bg);color:var
 #sheet[data-theme=dark]{--bg:#16171c;--cell:#23252c;--cellink:#f1f2f5;--chip:#ffe933;--chipink:#14151a}
 .head{margin-bottom:26px}
 #sheet [contenteditable]{outline:none;border-radius:6px}
-#sheet [contenteditable]:hover{background:rgba(127,127,127,.15)}
-#sheet [contenteditable]:focus{background:rgba(127,127,127,.22);box-shadow:0 0 0 2px rgba(127,127,127,.5)}
+#sheet [contenteditable]:not(.lv):hover{background:rgba(127,127,127,.15)}#sheet .lv:hover{filter:brightness(.92)}
+#sheet [contenteditable]:not(.lv):focus{background:rgba(127,127,127,.22)}#sheet [contenteditable]:focus{box-shadow:0 0 0 2px rgba(127,127,127,.5)}
 [contenteditable]:empty:before{content:attr(data-ph);opacity:.4}
 .exporting [contenteditable]:empty:before{content:""}
-.exporting [contenteditable]{background:none!important;box-shadow:none!important}
+#sheet.exporting [contenteditable]:not(.lv){background:none!important}#sheet.exporting [contenteditable]{box-shadow:none!important;filter:none!important}
 .exporting .lv:empty{display:none}
 h1{margin:0;font-size:34px;letter-spacing:-.02em;font-weight:700}
 .sub{color:var(--muted);font-size:16px;margin-top:4px;display:inline-block;min-width:120px}
@@ -87,7 +87,7 @@ document.getElementById("addR").onclick=addRow;document.getElementById("delR").o
 document.getElementById("reset").onclick=()=>{if(confirm("Bütün dəyişikliklər silinsin?")){try{localStorage.removeItem(KEY)}catch(e){}location.reload()}};
 document.getElementById("theme").onchange=e=>{sh.dataset.theme=e.target.value;sh.style.removeProperty("--bg");save()};
 document.getElementById("col").oninput=e=>{sh.style.setProperty("--bg",e.target.value);save()};
-async function snap(){sh.classList.add("exporting");try{return await html2canvas(sh,{scale:2,backgroundColor:null,useCORS:true})}finally{sh.classList.remove("exporting")}}
+async function snap(){if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();sh.classList.add("exporting");try{return await html2canvas(sh,{scale:2,backgroundColor:null,useCORS:true})}finally{sh.classList.remove("exporting")}}
 function dl(url,name){const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}
 document.getElementById("png").onclick=async()=>{const c=await snap();dl(c.toDataURL("image/png"),"cedvel.png")};
 document.getElementById("pdf").onclick=async()=>{const c=await snap();const {jsPDF}=window.jspdf;const w=c.width,h=c.height;
